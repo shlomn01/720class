@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>יום ראשון, שיעור ראשון</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎒</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Suez+One&family=Rubik:wght@400;500;600;700;800;900&family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css?v=4">
+<link rel="stylesheet" href="css/hud.css?v=4">
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- Full-frame art layer (immersive) -->
+  <div class="art-layer" id="art" aria-hidden="true"></div>
+  <div class="art-vignette" aria-hidden="true"></div>
+
+  <!-- HUD: meters + timer + scene tag -->
+  <div class="hud" id="hud">
+    <div class="bars" id="bars">
+      <div class="bar-row" id="row-control">
+        <span class="bar-label">🎯 שליטה</span>
+        <div class="bar-track"><div class="bar-fill control" id="bar-control"></div></div>
+        <span class="bar-val" id="val-control">5</span>
+      </div>
+      <div class="bar-row" id="row-energy">
+        <span class="bar-label">⚡ אנרגיה</span>
+        <div class="bar-track"><div class="bar-fill energy" id="bar-energy"></div></div>
+        <span class="bar-val" id="val-energy">7</span>
+      </div>
+      <div class="bar-row" id="row-stress">
+        <span class="bar-label">🔥 לחץ</span>
+        <div class="bar-track"><div class="bar-fill stress" id="bar-stress"></div></div>
+        <span class="bar-val" id="val-stress">3</span>
+      </div>
+      <div class="bar-row" id="row-fun">
+        <span class="bar-label">😊 סיפוק</span>
+        <div class="bar-track"><div class="bar-fill fun" id="bar-fun"></div></div>
+        <span class="bar-val" id="val-fun">5</span>
+      </div>
+    </div>
+    <div class="topright">
+      <div class="timer" id="timer">⏳ 45:00</div>
+      <div class="scene-tag" id="sceneTag"></div>
+      <button class="menu-btn" id="menuBtn" title="תפריט" aria-label="תפריט">☰</button>
+    </div>
+  </div>
+
+  <!-- Floating comic dialogue box -->
+  <div class="dialogue-wrap" id="dialogueWrap">
+    <div class="dialogue" id="dialogue"></div>
+  </div>
+
+  <!-- Minigame overlay -->
+  <div class="mg-overlay" id="mgOverlay" aria-hidden="true">
+    <div class="mg-box">
+      <div class="mg-title" id="mgTitle"></div>
+      <div class="mg-sub" id="mgSub"></div>
+      <canvas class="mg-canvas" id="mgCanvas" width="300" height="300"></canvas>
+      <div class="mg-hud">
+        <span id="mgScore">ניקוד: 0</span>
+        <span class="mg-timeloss" id="mgTimeLoss">⏳ −0 דק'</span>
+      </div>
+      <div class="mg-buttons">
+        <button class="mg-btn stay" id="mgStay">עוד סיבוב! 🎮</button>
+        <button class="mg-btn stop" id="mgStop">מספיק, חזרה ללימודים</button>
+      </div>
+      <div class="mg-note" id="mgNote">שים לב: הזמן בשיעור רץ בזמן שאתה משחק.</div>
+    </div>
+  </div>
+
+  <!-- Breathing exercise overlay -->
+  <div class="br-overlay" id="brOverlay" aria-hidden="true">
+    <div class="br-box">
+      <div class="br-title">רגע של נשימה</div>
+      <div class="br-sub">עקבו אחרי המעגל: שאיפה כשהוא גדל, נשיפה כשהוא מתכווץ.</div>
+      <div class="br-stage">
+        <div class="br-circle" id="brCircle">
+          <span class="br-phase" id="brPhase">היכונו…</span>
+          <span class="br-count" id="brCount"></span>
+        </div>
+      </div>
+      <div class="br-cycles" id="brCycles"></div>
+      <button class="big-btn ghost" id="brSkip">מספיק, אפשר להמשיך</button>
+    </div>
+  </div>
+
+  <!-- Framing screens overlay (menu / settings / gender / credits) -->
+  <div class="screen-overlay" id="screenOverlay" aria-hidden="true"></div>
+
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

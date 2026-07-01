@@ -1,0 +1,4 @@
+# heavy source originals — not needed for the live site
+assets/_source/
+.DS_Store
+Thumbs.db
