@@ -8,6 +8,7 @@ import { clipId } from './voice-hash.js';
 
 let manifest = null;
 let cur = null;                                    // the currently-playing Audio
+let prefetched = [];                               // retained refs so prefetch Audio objects aren't GC'd
 let voiceOn = localStorage.getItem('720_voice') !== '0';   // default ON
 const dev = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 
@@ -52,10 +53,11 @@ export function speakChoice(resolvedChoiceText){
 
 export function prefetchChoices(node){
   if(!manifest || !node || !node.choices) return;
+  prefetched = [];                                    // drop the previous node's prefetch refs
   const speaker = E.state.gender === 'f' ? 'dana' : 'yoav';
   for(const c of node.choices){
     const src = srcFor(speaker, E.resolveText(c.t));
-    if(src){ const a = new Audio(); a.preload = 'auto'; a.src = src; }
+    if(src){ const a = new Audio(); a.preload = 'auto'; a.src = src; prefetched.push(a); }
   }
 }
 
@@ -65,4 +67,3 @@ export function setVoiceOn(on){
   if(!voiceOn) stopVoice();
 }
 export function isVoiceOn(){ return voiceOn; }
-export function unlockVoice(){ /* HTML5 Audio unlocks on the same user gesture; kept for symmetry */ }
