@@ -57,6 +57,20 @@ export function resolveLine(beat){
   return resolveText(line);
 }
 
+/* A pronunciation-only variant can keep the visible line unchanged. */
+export function resolveSpeech(beat){
+  let line = beat.speech ?? beat.line;
+  if(beat.tpl){
+    const g = state.flags.goal || 'לא ברור';
+    line = (line||'').replace(/\{\{goal\}\}/g, g);
+  } else if(beat.flag){
+    const val = state.flags[beat.flag];
+    if(val) line = beat.speechIfTrue ?? beat.ifTrue ?? beat.speech ?? beat.line;
+    else line = beat.speechIfFalse ?? beat.ifFalse ?? beat.speech ?? beat.line;
+  }
+  return resolveText(line);
+}
+
 /* ---- fail check (order matters, mirrors prototype) ---- */
 export function checkFail(){
   if(state.stress >= MAX) return 'stress';
