@@ -12,23 +12,6 @@ export function normalizeSpeech(text){
     .trim();
 }
 
-/* Eleven v3 accepts inline IPA. Force an Israeli uvular resh (/ʁ/) only in
-   words that repeatedly came back with an alveolar/rolled r. This text is
-   used for synthesis and clip identity, never for what the player sees. */
-export function prepareTtsInput(text){
-  const replacements = [
-    [/אחרי/g, '/aχaˈʁej/'],
-    [/בקצרה/g, '/bektsaˈʁa/'],
-    [/עזרה/g, '/ezˈʁa/'],
-    [/יורדים/g, '/joˈʁdim/'],
-    [/ולקרוא/g, '/velikˈʁo/'],
-    [/לקרוא/g, '/likˈʁo/'],
-    [/לסגור/g, '/lisˈɡoʁ/'],
-    [/לרגע/g, '/leˈʁeɡa/'],
-  ];
-  return replacements.reduce((value, [pattern, ipa]) => value.replace(pattern, ipa), normalizeSpeech(text));
-}
-
 /* FNV-1a 32-bit → 8 hex chars. charCodeAt is UTF-16 in both Node & browser. */
 export function hashId(str){
   let h = 0x811c9dc5;
@@ -41,5 +24,5 @@ export function hashId(str){
 
 /* manifest key / mp3 basename for one spoken clip */
 export function clipId(speaker, resolvedText){
-  return hashId(speaker + '|' + prepareTtsInput(resolvedText));
+  return hashId(speaker + '|' + normalizeSpeech(resolvedText));
 }
