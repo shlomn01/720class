@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { normalizeSpeech, hashId, clipId } from './voice-hash.js';
+import { normalizeSpeech, prepareTtsInput, hashId, clipId } from './voice-hash.js';
 import { resolveLine, resolveSpeech, state } from './engine.js';
 import { story } from './story.js';
 
@@ -47,6 +47,12 @@ test('speech override follows the reachable flag branch', () => {
   assert.equal(resolveSpeech(beat), 'מישהו בא?');
 });
 
+test('problem resh words synthesize with an Israeli uvular resh', () => {
+  const input = prepareTtsInput('אחרי השיעור, לענות בקצרה, ולקרוא למיכל ולסגור');
+  assert.equal(input, '/aχaˈʁej/ השיעור, לענות /bektsaˈʁa/, /velikˈʁo/ למיכל ו/lisˈɡoʁ/');
+  assert.doesNotMatch(input, /אחרי|בקצרה|לקרוא|לסגור/);
+});
+
 test('voice regressions stay fixed for both player genders', () => {
   const dana = story.s2_tasks.beats.find(b => b.speaker === 'dana');
   const bot = story.s7b_botgood.beats.find(b => b.speaker === 'bot');
@@ -64,8 +70,8 @@ test('voice regressions stay fixed for both player genders', () => {
   assert.match(resolveSpeech(exit), /כן ואמיתי/);
   assert.doesNotMatch(resolveSpeech(exit), /כנה ואמיתי/);
   assert.match(resolveSpeech(michalHelp), /שֶׁהֵרַמְתְּ יד/);
-  assert.match(story.s2_tasks.choices[2].speech, /יוֹרדים לשחק/);
-  assert.match(story.s7_bot.choices[2].speech, /^לִסְגּוֹר את הבוט/);
+  assert.match(story.s2_tasks.choices[2].speech, /יורדים לשחק/);
+  assert.match(story.s7_bot.choices[2].speech, /^לסגור את הבוט/);
 });
 
 test('Dana help scene follows her question before returning to class flow', () => {
