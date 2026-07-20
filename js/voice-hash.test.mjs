@@ -75,3 +75,31 @@ test('Dana help scene follows her question before returning to class flow', () =
   assert.equal(story.s3b_danahelp.continue, 's4_dana');
   assert.equal(story.s3b_danalater.continue, 's4_dana');
 });
+
+test('problematic choice pronunciations use safe first-person speech', () => {
+  const goal = story.s1b_goal.choices[1];
+  const [retry, callMichal, markQuestion, phone] = story.s3_stuck.choices;
+  const callAfterPhone = story.s3d_after.choices[1];
+  const breakPhone = story.s10_break.choices[2];
+
+  state.gender = 'm';
+  assert.match(resolveSpeech({ speech:goal.speech }), /אני פונה למישהו/);
+  assert.equal(resolveSpeech({ speech:callMichal.speech }), 'אני פונה למיכל עכשיו.');
+  assert.equal(resolveSpeech({ speech:markQuestion.speech }), 'מסמנים את השאלה ומדלגים. בסוף ננסה שוב.');
+  assert.match(resolveSpeech({ speech:phone.speech }), /אני מציץ בטלפון/);
+  assert.match(resolveSpeech({ speech:breakPhone.speech }), /אני משחק בטלפון/);
+
+  state.gender = 'f';
+  assert.match(resolveSpeech({ speech:goal.speech }), /אני פונה למישהו/);
+  assert.match(resolveSpeech({ speech:phone.speech }), /אני מציצה בטלפון/);
+  assert.match(resolveSpeech({ speech:breakPhone.speech }), /אני משחקת בטלפון/);
+  assert.match(callAfterPhone.speech, /^אני פונה למיכל/);
+
+  assert.doesNotMatch(goal.speech, /עזרה/);
+  assert.doesNotMatch(callMichal.speech, /לקרוא/);
+  assert.doesNotMatch(markQuestion.speech, /לסמן/);
+  assert.notEqual(phone.speech, phone.t);
+  assert.notEqual(callAfterPhone.speech, callAfterPhone.t);
+  assert.notEqual(breakPhone.speech, breakPhone.t);
+  assert.ok(retry, 'the unaffected retry choice should remain in place');
+});
