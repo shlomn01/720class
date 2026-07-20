@@ -71,9 +71,22 @@ test('voice regressions stay fixed for both player genders', () => {
 
 test('Dana help scene follows her question before returning to class flow', () => {
   assert.ok(story.s3b_solo.choices?.length >= 3);
-  assert.ok(story.s3b_solo.choices.some(c => c.to === 's3b_danahelp'));
+  assert.equal(story.s3b_solo.choices[0].to, 's3b_danahelp');
+  assert.equal(story.s3b_solo.choices[1].to, 'BR_dana');
+  assert.equal(story.BR_dana.breathing, true);
+  assert.equal(story.BR_dana.to, 's3b_danabreathe');
   assert.equal(story.s3b_danahelp.continue, 's4_dana');
+  assert.equal(story.s3b_danabreathe.continue, 's4_dana');
+  assert.match(story.s3b_danabreathe.beats[0].line, /באמת עזר|פחות לחוץ/);
+  assert.doesNotMatch(story.s3b_danabreathe.beats[0].line, /מפרקים את השאלה/);
   assert.equal(story.s3b_danalater.continue, 's4_dana');
+
+  const later = story.s3b_solo.choices[2];
+  state.gender = 'm';
+  assert.match(resolveSpeech({ speech:later.speech }), /אסביר לָךְ בהפסקה/);
+  state.gender = 'f';
+  assert.match(resolveSpeech({ speech:later.speech }), /אסביר לָךְ בהפסקה/);
+  assert.doesNotMatch(later.speech, /לְךָ/);
 });
 
 test('problematic choice pronunciations use safe first-person speech', () => {
