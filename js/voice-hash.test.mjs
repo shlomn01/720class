@@ -89,11 +89,29 @@ test('Dana help scene follows her question before returning to class flow', () =
   assert.doesNotMatch(later.speech, /לְךָ/);
 });
 
+test('Dana calls the notification idea brilliant only after the player suggests it', () => {
+  const beats = story.s5b_pairgood.beats;
+  assert.equal(beats[0].speaker, 'you');
+  assert.match(beats[0].line, /נכבה התראות בטלפון/);
+  assert.equal(beats[1].speaker, 'dana');
+  assert.match(beats[1].line, /זה גאוני/);
+});
+
+test('the post-mentor inner thought follows the selected player gender', () => {
+  const beat = story.s8b_mentorreply.beats.find(item => item.speaker === 'inner');
+  state.gender = 'm';
+  assert.match(resolveLine(beat), /מרגיש קצת יותר קל/);
+  state.gender = 'f';
+  assert.match(resolveLine(beat), /מרגישה קצת יותר קל/);
+});
+
 test('problematic choice pronunciations use safe first-person speech', () => {
   const goal = story.s1b_goal.choices[1];
   const [retry, callMichal, markQuestion, phone] = story.s3_stuck.choices;
   const callAfterPhone = story.s3d_after.choices[1];
   const breakPhone = story.s10_break.choices[2];
+  const shortPairReply = story.s5_pair.choices[1];
+  const courtBreak = story.s10_break.choices[0];
 
   state.gender = 'm';
   assert.match(resolveSpeech({ speech:goal.speech }), /אני פונה למישהו/);
@@ -101,6 +119,8 @@ test('problematic choice pronunciations use safe first-person speech', () => {
   assert.equal(resolveSpeech({ speech:markQuestion.speech }), 'מסמנים את השאלה ומדלגים. בסוף ננסה שוב.');
   assert.match(resolveSpeech({ speech:phone.speech }), /אני מציץ בטלפון/);
   assert.match(resolveSpeech({ speech:breakPhone.speech }), /אני משחק בטלפון/);
+  assert.equal(resolveSpeech({ speech:shortPairReply.speech }), 'עונים בקצרה, וחוזרים לחשוב על המבחן.');
+  assert.equal(resolveSpeech({ speech:courtBreak.speech }), 'יורדים למגרש עם דנה — מגיע לי אחרי שעבדתי.');
 
   state.gender = 'f';
   assert.match(resolveSpeech({ speech:goal.speech }), /אני פונה למישהו/);
